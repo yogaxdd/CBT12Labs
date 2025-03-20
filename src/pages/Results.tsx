@@ -26,7 +26,6 @@ import {
   DialogDescription 
 } from '@/components/ui/dialog';
 
-// Mock data for tests
 const mockTests: Test[] = [
   {
     id: '1',
@@ -78,7 +77,6 @@ const mockTests: Test[] = [
   },
 ];
 
-// Mock data for completed tests
 const mockCompletedResults: TestResult[] = [
   {
     id: '1',
@@ -90,14 +88,12 @@ const mockCompletedResults: TestResult[] = [
     totalQuestions: 15,
     correctAnswers: 13,
     answers: mockTests[0].questions.map((question, index) => {
-      // Simulate correct answers for most questions, but some wrong ones
       const isCorrect = index % 7 !== 0;
       
       const correctOptionIds = question.options
         .filter(option => option.isCorrect)
         .map(option => option.id);
       
-      // For wrong answers, select incorrect options
       const selectedOptions = isCorrect 
         ? [...correctOptionIds]
         : question.options
@@ -122,14 +118,12 @@ const mockCompletedResults: TestResult[] = [
     totalQuestions: 18,
     correctAnswers: 13,
     answers: mockTests[1].questions.map((question, index) => {
-      // Simulate correct answers for most questions, but some wrong ones
       const isCorrect = index % 5 !== 0;
       
       const correctOptionIds = question.options
         .filter(option => option.isCorrect)
         .map(option => option.id);
       
-      // For wrong answers, select incorrect options
       const selectedOptions = isCorrect 
         ? [...correctOptionIds]
         : question.options
@@ -146,7 +140,6 @@ const mockCompletedResults: TestResult[] = [
   },
 ];
 
-// Calculate time spent
 const calculateTimeSpent = (startTime: string, endTime: string | null) => {
   if (!endTime) return 'N/A';
   
@@ -171,12 +164,10 @@ const ResultsPage = () => {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [isQuestionListOpen, setIsQuestionListOpen] = useState(false);
   
-  // Get test by ID
   const getTestById = (testId: string) => {
     return mockTests.find(test => test.id === testId) || null;
   };
   
-  // Get user's answer for a specific question
   const getUserAnswer = (questionId: string): string[] => {
     if (!selectedResult) return [];
     
@@ -184,7 +175,6 @@ const ResultsPage = () => {
     return answer ? answer.selectedOptions : [];
   };
   
-  // Check if answer is correct
   const isAnswerCorrect = (question: Question, userAnswer: UserAnswer): boolean => {
     const correctOptionIds = question.options
       .filter(option => option.isCorrect)
@@ -196,7 +186,6 @@ const ResultsPage = () => {
         correctOptionIds.includes(userAnswer.selectedOptions[0])
       );
     } else {
-      // For multiple choice, all correct options must be selected and no incorrect ones
       const allCorrectSelected = correctOptionIds.every(id => 
         userAnswer.selectedOptions.includes(id)
       );
@@ -209,7 +198,6 @@ const ResultsPage = () => {
     }
   };
   
-  // Get current question
   const getCurrentQuestion = () => {
     if (!currentTest) return null;
     return currentTest.questions[currentQuestionIndex];
@@ -217,7 +205,6 @@ const ResultsPage = () => {
   
   const currentQuestion = getCurrentQuestion();
   
-  // View result details
   const viewResultDetails = (result: TestResult) => {
     const test = getTestById(result.testId);
     setSelectedResult(result);
@@ -225,7 +212,6 @@ const ResultsPage = () => {
     setCurrentQuestionIndex(0);
   };
   
-  // Navigate to next question
   const goToNextQuestion = () => {
     if (!currentTest) return;
     
@@ -234,14 +220,12 @@ const ResultsPage = () => {
     }
   };
   
-  // Navigate to previous question
   const goToPrevQuestion = () => {
     if (currentQuestionIndex > 0) {
       setCurrentQuestionIndex(currentQuestionIndex - 1);
     }
   };
   
-  // Go to specific question
   const goToQuestion = (index: number) => {
     if (!currentTest) return;
     
@@ -251,13 +235,11 @@ const ResultsPage = () => {
     }
   };
   
-  // Close result details view
   const closeResultDetails = () => {
     setSelectedResult(null);
     setCurrentTest(null);
   };
   
-  // Format date
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
     return date.toLocaleDateString('en-US', {
@@ -275,7 +257,6 @@ const ResultsPage = () => {
       
       <main className="flex-1 container mx-auto px-4 pt-20 pb-12">
         {!selectedResult ? (
-          // Results list view
           <>
             <div className="mb-8">
               <h1 className="text-3xl font-bold">Your Test Results</h1>
@@ -383,14 +364,13 @@ const ResultsPage = () => {
                             <div className="w-full">
                               <Progress 
                                 value={scorePercentage} 
-                                className="h-2" 
-                                indicatorClassName={
+                                className={`h-2 ${
                                   scorePercentage < 60 
                                     ? "bg-red-500" 
                                     : scorePercentage < 80 
                                       ? "bg-yellow-500" 
                                       : "bg-green-500"
-                                }
+                                }`}
                               />
                             </div>
                           </div>
@@ -403,7 +383,6 @@ const ResultsPage = () => {
             )}
           </>
         ) : (
-          // Result details view
           <>
             <div className="mb-6 flex items-center justify-between">
               <Button 
@@ -447,7 +426,6 @@ const ResultsPage = () => {
               </div>
             </div>
             
-            {/* Question display */}
             <div className="max-w-4xl mx-auto">
               {currentQuestion && (
                 <div className="bg-white rounded-lg shadow-subtle border p-6 mb-6">
@@ -494,7 +472,6 @@ const ResultsPage = () => {
                 </div>
               )}
               
-              {/* Navigation */}
               <div className="flex items-center justify-between">
                 <Button
                   variant="outline"
@@ -518,7 +495,6 @@ const ResultsPage = () => {
         )}
       </main>
       
-      {/* Question List Dialog */}
       <Dialog open={isQuestionListOpen} onOpenChange={setIsQuestionListOpen}>
         <DialogContent className="sm:max-w-md max-h-[80vh] overflow-auto">
           <DialogHeader>
