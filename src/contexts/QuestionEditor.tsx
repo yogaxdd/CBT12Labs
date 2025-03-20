@@ -208,10 +208,11 @@ const QuestionEditor: React.FC<QuestionEditorProps> = ({
               <div className="mt-2.5">
                 {questionType === 'single' ? (
                   <RadioGroupItem
+                    value={option.id}
                     checked={option.isCorrect}
-                    onClick={() => handleOptionCorrectChange(option.id, true)}
-                    className="mt-0.5"
                     id={`option-${option.id}`}
+                    className="mt-0.5"
+                    onClick={() => handleOptionCorrectChange(option.id, true)}
                   />
                 ) : (
                   <Checkbox
